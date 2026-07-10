@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 14% 4%;
+    --foreground: 0 0% 88%;
+    --card: 220 12% 15%;
+    --card-foreground: 0 0% 88%;
+    --popover: 220 12% 15%;
+    --popover-foreground: 0 0% 88%;
+    --primary: 0 100% 71%;
+    --primary-foreground: 220 14% 4%;
+    --secondary: 220 12% 15%;
+    --secondary-foreground: 0 0% 88%;
+    --muted: 220 12% 15%;
+    --muted-foreground: 231 10% 58%;
+    --accent: 76 91% 60%;
+    --accent-foreground: 220 14% 4%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 8% 25%;
+    --input: 220 8% 25%;
+    --ring: 0 100% 71%;
+    --radius: 0.75rem;
+    --sidebar-background: 220 14% 4%;
+    --sidebar-foreground: 0 0% 88%;
+    --sidebar-primary: 0 100% 71%;
+    --sidebar-primary-foreground: 220 14% 4%;
+    --sidebar-accent: 220 12% 15%;
+    --sidebar-accent-foreground: 0 0% 88%;
+    --sidebar-border: 220 8% 25%;
+    --sidebar-ring: 0 100% 71%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+  body {
+    @apply bg-[#0B0C10] text-[#E0E0E0] antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .font-arcade {
+    font-family: 'Press Start 2P', cursive;
+  }
+  .font-display {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .font-body {
+    font-family: 'Inter', sans-serif;
+  }
+  .text-gradient-coral {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .text-gradient-lime {
+    background: linear-gradient(135deg, #C3F73A, #D4FF6A);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .glow-coral {
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.4), 0 0 40px rgba(255, 107, 107, 0.2);
+  }
+  .glow-lime {
+    box-shadow: 0 0 20px rgba(195, 247, 58, 0.4), 0 0 40px rgba(195, 247, 58, 0.2);
+  }
+}
