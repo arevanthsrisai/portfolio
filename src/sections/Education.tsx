@@ -1,200 +1,210 @@
-import { motion } from 'framer-motion';
-import { GraduationCap, School, Award, BookOpen, Star } from 'lucide-react';
-
-const education = [
-  {
-    id: 1,
-    institution: 'Amrita Vishwa Vidyapeetham',
-    location: 'Amaravati Campus',
-    degree: 'B.Tech in Computer Science and Engineering',
-    period: '2025 – Present',
-    grade: 'CGPA: 9.02',
-    icon: GraduationCap,
-    accent: '#FF6B6B',
-    current: true,
+import { useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { academics, education, type TimelineEntry } from "@/data/profile";
+import { Reveal, SectionHeading } from "@/components/primitives";
+import { cn } from "@/lib/utils";
+type Accent = "iris" | "teal" | "amber";
+const ACCENT: Record<Accent, { node: string; dot: string; score: string; period: string; glow: string; border: string }> = {
+  iris: {
+    node: "border-iris/50",
+    dot: "bg-iris-soft",
+    score: "text-iris-soft",
+    period: "text-iris/80",
+    glow: "bg-[radial-gradient(circle,rgba(143,143,248,0.09),transparent_65%)]",
+    border: "hover:border-iris/25",
   },
-  {
-    id: 2,
-    institution: 'Narayana Junior College',
-    location: 'Amaravati, Andhra Pradesh',
-    degree: 'Higher Secondary Education (Class XII)',
-    period: '2023 – 2024',
-    grade: '96%',
-    icon: School,
-    accent: '#C3F73A',
-    current: false,
+  teal: {
+    node: "border-teal/50",
+    dot: "bg-teal-soft",
+    score: "text-teal-soft",
+    period: "text-teal/80",
+    glow: "bg-[radial-gradient(circle,rgba(99,217,196,0.07),transparent_65%)]",
+    border: "hover:border-teal/25",
   },
-  {
-    id: 3,
-    institution: 'Narayana E.M. School',
-    location: 'Guntur, Andhra Pradesh',
-    degree: 'Secondary Education (Class X)',
-    period: '2022 – 2023',
-    grade: '95.67%',
-    icon: BookOpen,
-    accent: '#9B5DE5',
-    current: false,
+  amber: {
+    node: "border-amber/50",
+    dot: "bg-amber-soft",
+    score: "text-amber-soft",
+    period: "text-amber/80",
+    glow: "bg-[radial-gradient(circle,rgba(236,194,124,0.09),transparent_65%)]",
+    border: "hover:border-amber/25",
   },
-];
-
-const achievements = [
-  {
-    title: 'Prompt Craft Winner',
-    description: 'Won the Prompt Craft event at Tantrotsav 2026 conducted by Amrita Chennai',
-    icon: Award,
-    accent: '#FF6B6B',
-  },
-  {
-    title: 'Python Certification',
-    description: 'Python Course for Beginners With Certification – Scaler Topics (2026)',
-    icon: Star,
-    accent: '#C3F73A',
-  },
-  {
-    title: 'ReLU Club Activator',
-    description: 'Active member participating in AI/ML technical sessions and peer learning',
-    icon: GraduationCap,
-    accent: '#9B5DE5',
-  },
-];
-
-export default function Education() {
+};
+function TimelineCard({ entry }: { entry: TimelineEntry }) {
+  const a = ACCENT[entry.accent];
+  const [open, setOpen] = useState(false);
   return (
-    <section className="relative py-24 md:py-32 bg-[#0B0C10]">
-      {/* Top gradient border */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#FF6B6B]/30 to-transparent" />
-
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
+    <article
+      className={cn(
+        "glass group relative mt-4 overflow-hidden rounded-2xl p-6 transition-all duration-500 sm:p-8",
+        a.border,
+        "hover:-translate-y-0.5"
+      )}
+    >
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full blur-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+          a.glow
+        )}
+      />
+      <div className="relative flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h3 className="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+            {entry.title}
+          </h3>
+          <p className="mt-1.5 text-sm font-medium text-ink-dim">{entry.credential}</p>
+          <p className="mt-1 text-[13px] text-ink-faint">{entry.place}</p>
+        </div>
+        <p
+          className={cn("font-mono text-sm font-medium tracking-[0.12em]", a.score)}
+          aria-label={`Score: ${entry.score}`}
         >
-          <span className="text-[#9B5DE5] font-arcade text-xs tracking-wider">
-            &lt;EDUCATION /&gt;
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-white mt-2">
-            The Journey.
-          </h2>
-        </motion.div>
-
-        {/* Timeline */}
-        <div className="relative">
-          {/* Timeline line */}
-          <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-[#FF6B6B] via-[#C3F73A] to-[#9B5DE5]" />
-
-          <div className="space-y-12">
-            {education.map((edu, index) => (
-              <motion.div
-                key={edu.id}
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="relative pl-16 md:pl-20"
-              >
-                {/* Timeline dot */}
-                <div
-                  className="absolute left-3 md:left-5 top-2 w-6 h-6 rounded-full border-4 border-[#0B0C10]"
-                  style={{ backgroundColor: edu.accent }}
-                />
-                {edu.current && (
-                  <div
-                    className="absolute left-3 md:left-5 top-2 w-6 h-6 rounded-full animate-ping opacity-40"
-                    style={{ backgroundColor: edu.accent }}
-                  />
-                )}
-
-                {/* Card */}
-                <div className="bg-[#1F2833]/50 border border-[#1F2833] rounded-xl p-6 hover:border-[#FF6B6B]/20 transition-all">
-                  <div className="flex items-start gap-4">
-                    <div
-                      className="p-3 rounded-lg shrink-0"
-                      style={{ backgroundColor: `${edu.accent}15` }}
-                    >
-                      <edu.icon size={24} style={{ color: edu.accent }} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <h3 className="font-display text-lg font-bold text-white">
-                          {edu.institution}
-                        </h3>
-                        {edu.current && (
-                          <span className="px-2 py-0.5 bg-[#C3F73A]/20 text-[#C3F73A] text-xs rounded-full font-medium">
-                            Current
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-[#8A8D9F] text-sm mt-1">
-                        {edu.location}
-                      </p>
-                      <p className="text-[#E0E0E0] mt-2">{edu.degree}</p>
-                      <div className="flex items-center gap-4 mt-3 text-sm">
-                        <span className="text-[#8A8D9F]">{edu.period}</span>
-                        <span
-                          className="font-semibold"
-                          style={{ color: edu.accent }}
-                        >
-                          {edu.grade}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+          {entry.score}
+        </p>
+      </div>
+      {entry.current ? (
+        <div className="relative mt-5">
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="semester-breakdown"
+            className={cn(
+              "inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-1.5",
+              "font-mono text-[10px] uppercase tracking-[0.22em] text-ink-dim",
+              "transition-colors duration-300 ease-smooth hover:border-iris/40 hover:bg-iris/[0.08] hover:text-iris-soft",
+              "focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-2 focus-visible:outline-iris/60"
+            )}
+          >
+            Semester breakdown
+            <ChevronDown
+              size={13}
+              strokeWidth={1.8}
+              aria-hidden
+              className={cn(
+                "transition-transform duration-450 ease-smooth",
+                open && "rotate-180"
+              )}
+            />
+          </button>
+          <div
+            id="semester-breakdown"
+            className={cn(
+              "grid transition-[grid-template-rows] duration-450 ease-smooth",
+              open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+            )}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <div className="mt-4 rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 sm:p-5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[13px] font-medium text-ink-dim">
+                    SGPA
+                  </span>
+                  <span className="font-mono text-base font-semibold tracking-[0.08em] text-iris-soft">
+                    {academics.cgpa}
+                  </span>
                 </div>
-              </motion.div>
-            ))}
+                <div className="mt-3 space-y-2.5 border-t border-white/[0.06] pt-3">
+                  {academics.semesters.map((s) => (
+                    <div key={s.term} className="flex items-center justify-between gap-2">
+                      <span className="text-[13px] text-ink-faint">{s.term}</span>
+                      <span className="font-mono text-sm tracking-[0.08em] text-ink-dim">
+                        SGPA {s.sgpa}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Achievements Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.6 }}
-          className="mt-24"
-        >
-          <span className="text-[#C3F73A] font-arcade text-xs tracking-wider">
-            &lt;ACHIEVEMENTS /&gt;
-          </span>
-          <h3 className="font-display text-3xl font-bold text-white mt-2 mb-8">
-            Milestones.
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {achievements.map((achievement, index) => (
-              <motion.div
-                key={achievement.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-[#1F2833]/50 border border-[#1F2833] rounded-xl p-6 hover:border-[#FF6B6B]/20 transition-all group"
-              >
-                <div
-                  className="p-3 rounded-lg w-fit mb-4"
-                  style={{
-                    backgroundColor: `${achievement.accent}15`,
-                  }}
-                >
-                  <achievement.icon
-                    size={24}
-                    style={{ color: achievement.accent }}
-                  />
-                </div>
-                <h4 className="font-display text-lg font-bold text-white group-hover:text-[#FF6B6B] transition-colors">
-                  {achievement.title}
-                </h4>
-                <p className="text-[#8A8D9F] text-sm mt-2 leading-relaxed">
-                  {achievement.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
+      ) : null}
+    </article>
+  );
+}
+export function Education() {
+  const listRef = useRef<HTMLOListElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: listRef,
+    offset: ["start 0.8", "end 0.55"],
+  });
+  const progress = useSpring(scrollYProgress, { stiffness: 90, damping: 26, mass: 0.4 });
+  return (
+    <section id="education" className="relative py-32 md:py-48">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-px w-[min(48rem,80%)] -translate-x-1/2 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
+      />
+      <div className="shell">
+        <SectionHeading
+          eyebrow="Education"
+          title="The path so far."
+          description="Formal study backing the building."
+        />
+        <div className="relative mt-16">
+          {/* spine — track + scroll-linked fill */}
+          <div
+            aria-hidden
+            className="absolute bottom-2 left-[7px] top-2 w-px bg-white/[0.07] sm:left-[9px]"
+          />
+          {reduce ? (
+            <div
+              aria-hidden
+              className="absolute bottom-2 left-[7px] top-2 w-px bg-gradient-to-b from-iris/50 via-amber/40 to-transparent sm:left-[9px]"
+            />
+          ) : (
+            <motion.div
+              aria-hidden
+              style={{ scaleY: progress }}
+              className="absolute bottom-2 left-[7px] top-2 w-px origin-top bg-gradient-to-b from-iris via-amber to-amber/30 sm:left-[9px]"
+            />
+          )}
+          <ol ref={listRef} className="space-y-12">
+            {education.map((entry, i) => {
+              const a = ACCENT[entry.accent];
+              return (
+                <li key={entry.title} className="relative pl-10 sm:pl-14">
+                  <motion.span
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                    aria-hidden
+                    className={cn(
+                      "absolute left-0 top-1.5 grid h-[15px] w-[15px] place-items-center rounded-full border bg-base-900 sm:h-[19px] sm:w-[19px]",
+                      a.node
+                    )}
+                  >
+                    <span className={cn("h-[5px] w-[5px] rounded-full", a.dot)} />
+                  </motion.span>
+                  <Reveal delay={0.1 + i * 0.08}>
+                    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+                      <p className={cn("font-mono text-[11px] uppercase tracking-[0.3em]", a.period)}>
+                        {entry.period}
+                      </p>
+                      {entry.current ? (
+                        <span
+                          className="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/[0.08] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-teal-soft"
+                          aria-label="Currently studying here"
+                        >
+                          <span aria-hidden className="relative flex h-1.5 w-1.5">
+                            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal opacity-60" />
+                            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal" />
+                          </span>
+                          Current
+                        </span>
+                      ) : null}
+                    </div>
+                    <TimelineCard entry={entry} />
+                  </Reveal>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </div>
     </section>
   );

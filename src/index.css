@@ -2,82 +2,217 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 220 14% 4%;
-    --foreground: 0 0% 88%;
-    --card: 220 12% 15%;
-    --card-foreground: 0 0% 88%;
-    --popover: 220 12% 15%;
-    --popover-foreground: 0 0% 88%;
-    --primary: 0 100% 71%;
-    --primary-foreground: 220 14% 4%;
-    --secondary: 220 12% 15%;
-    --secondary-foreground: 0 0% 88%;
-    --muted: 220 12% 15%;
-    --muted-foreground: 231 10% 58%;
-    --accent: 76 91% 60%;
-    --accent-foreground: 220 14% 4%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 8% 25%;
-    --input: 220 8% 25%;
-    --ring: 0 100% 71%;
-    --radius: 0.75rem;
-    --sidebar-background: 220 14% 4%;
-    --sidebar-foreground: 0 0% 88%;
-    --sidebar-primary: 0 100% 71%;
-    --sidebar-primary-foreground: 220 14% 4%;
-    --sidebar-accent: 220 12% 15%;
-    --sidebar-accent-foreground: 0 0% 88%;
-    --sidebar-border: 220 8% 25%;
-    --sidebar-ring: 0 100% 71%;
-  }
+/* ---------------------------------------------------------------------------
+   Global motion tokens — every CSS transition in the site reads from here.
+   --transition-smooth is the signature premium curve (ease-out-quart).
+--------------------------------------------------------------------------- */
+:root {
+  color-scheme: dark;
+  --shell-pad: clamp(1.25rem, 5vw, 4rem);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 450ms cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-fast: 300ms cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-slow: 700ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: rgb(255 255 255 / 0.06);
   }
   html {
     scroll-behavior: auto;
   }
-  body {
-    @apply bg-[#0B0C10] text-[#E0E0E0] antialiased;
-    font-family: 'Inter', sans-serif;
+  html.lenis,
+  html.lenis body {
+    height: auto;
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', sans-serif;
-    letter-spacing: -0.02em;
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  body {
+    @apply bg-base-950 font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgb(143 143 248 / 0.28);
+    color: #f2f3ff;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(182 185 255 / 0.7);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #05060a;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #232738;
+    border-radius: 8px;
+    border: 2px solid #05060a;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #343952;
+  }
+}
+
+@layer components {
+  .glass {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.055), rgb(255 255 255 / 0.018));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .glass-deep {
+    background: linear-gradient(165deg, rgb(13 15 24 / 0.86), rgb(7 8 13 / 0.92));
+    border: 1px solid rgb(255 255 255 / 0.07);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .hairline {
+    border: 1px solid rgb(255 255 255 / 0.07);
+  }
+  .text-gradient {
+    background: linear-gradient(100deg, #eef0ff 0%, #b6b9ff 45%, #93e9da 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-brand {
+    background: linear-gradient(100deg, #b6b9ff 10%, #8f8ff8 55%, #93e9da 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.32em] text-ink-faint;
+  }
+
+  /* ---------------- scroll reveal (Intersection Observer driven) ------------- */
+  /* .is-visible is toggled by the observer hook; the transition lives here so
+     timing stays centralized in the custom properties above. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity var(--transition-smooth) var(--reveal-delay, 0ms),
+      transform var(--transition-smooth) var(--reveal-delay, 0ms),
+      background-color var(--transition-fast),
+      border-color var(--transition-fast),
+      color var(--transition-fast);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------------- nav links: underline slides out from center -------------- */
+  .nav-underline::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 4px;
+    height: 1px;
+    width: calc(100% - 1.75rem);
+    background: currentColor;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    transition: transform var(--transition-fast);
+    pointer-events: none;
+  }
+  .nav-underline:hover::after,
+  .nav-underline[aria-current="true"]::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+
+  /* --------------- buttons: background-fill expansion + inversion ------------ */
+  .btn-fill {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      color var(--transition-fast),
+      box-shadow 450ms var(--ease-out-quart);
+  }
+  .btn-fill:hover,
+  .btn-fill:focus-visible {
+    box-shadow:
+      0 0 60px -12px rgba(143, 143, 248, 0.45),
+      0 8px 30px -12px rgba(0, 0, 0, 0.6);
+  }
+  .btn-fill::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--fill-color, #b6b9ff);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 450ms var(--ease-out-quart);
+  }
+  .btn-fill:hover::before,
+  .btn-fill:focus-visible::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* project card surface tint — color shifts in on hover over 300ms */
+  .card-shift {
+    transition:
+      background-color 300ms cubic-bezier(0.25, 1, 0.5, 1),
+      border-color 300ms cubic-bezier(0.25, 1, 0.5, 1);
   }
 }
 
 @layer utilities {
-  .font-arcade {
-    font-family: 'Press Start 2P', cursive;
+  .shell {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: var(--shell-pad);
   }
-  .font-display {
-    font-family: 'Space Grotesk', sans-serif;
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
   }
-  .font-body {
-    font-family: 'Inter', sans-serif;
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
-  .text-gradient-coral {
-    background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+
+  /* ------- section bridge: soft accent glow spilling between sections ------- */
+  .section-glow {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    height: 18rem;
+    width: min(60rem, 90%);
+    transform: translateX(-50%);
+    border-radius: 9999px;
+    background: radial-gradient(ellipse, var(--glow-color, rgb(143 143 248 / 0.05)), transparent 65%);
+    filter: blur(48px);
   }
-  .text-gradient-lime {
-    background: linear-gradient(135deg, #C3F73A, #D4FF6A);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
-  .glow-coral {
-    box-shadow: 0 0 20px rgba(255, 107, 107, 0.4), 0 0 40px rgba(255, 107, 107, 0.2);
-  }
-  .glow-lime {
-    box-shadow: 0 0 20px rgba(195, 247, 58, 0.4), 0 0 40px rgba(195, 247, 58, 0.2);
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

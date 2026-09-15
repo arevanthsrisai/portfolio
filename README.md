@@ -1,73 +1,45 @@
-# React + TypeScript + Vite
+# Revanth — Developer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A dark, motion-rich single-page portfolio built with React, TypeScript, and Vite. Sections include a hero, selected work, achievements, voices/testimonials, toolkit marquee, currently-working board, principles, about, education, arcade, and contact.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React 18 + TypeScript (strict)** — component architecture
+- **Vite 5** — dev server and production bundling
+- **Tailwind CSS 3** — design system (`glass`, `hairline`, custom accent tokens)
+- **Framer Motion 11** — springs, 3D tilt/depth, AnimatePresence transitions
+- **GSAP + Lenis** — scroll-driven motion and smooth scrolling
+- **lucide-react** — icons
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev       # dev server with hot reload
+npm run build     # type-check + production build -> dist/
+npm run preview   # serve the production build locally
+npm run typecheck # type-check only
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Project Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+├── public/assets/        # optimized images served with the site
+├── src/
+│   ├── components/       # shared UI (Navbar, Footer, primitives, pointer glow)
+│   ├── data/profile.ts   # single source of truth for all personal content
+│   ├── hooks/            # useLenis, useMediaQuery
+│   ├── lib/              # utils, gsap, arcade game logic
+│   └── sections/         # one file per page section
+├── index.html            # static shell (title/meta); all content is React-rendered
+└── tailwind.config.js    # design tokens
+```
+
+## Customization
+
+All copy and content — identity, bio, stats, projects, testimonials — lives in [`src/data/profile.ts`](src/data/profile.ts). Edit that file to update the site; no component changes required. Optimized images go in `public/assets/` (raw source originals are intentionally not committed).
+
+## Notes
+
+- The `Voices` section uses dwell-based hover promotion: resting the pointer in a zone promotes that image, continuous motion (circling/wiggling) never triggers a swap, and a swap cooldown absorbs click spam.
+- QA was verified with `tsc`, production builds, and headless-browser smoke tests (keyboard, touch, mobile overflow, console errors).
