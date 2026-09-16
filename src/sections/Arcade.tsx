@@ -343,7 +343,7 @@ export function Arcade() {
         : "ring-white/[0.06]";
 
   return (
-    <div id="arcade" data-phase={phase} className="relative py-20 sm:py-28 scroll-mt-24">
+    <div id="arcade" data-phase={phase} className="relative py-20 sm:py-28">
       <div className="mb-6 flex justify-center">
         <div className="relative rounded-lg border border-iris/40 bg-base-900/80 px-6 py-2.5 shadow-[0_0_40px_-12px_rgba(143,143,248,0.45)]">
           <span className="font-arcade text-[11px] tracking-[0.2em] text-iris sm:text-xs">

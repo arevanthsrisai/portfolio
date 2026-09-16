@@ -14,3 +14,6 @@ tsconfig.tsbuildinfo
 .DS_Store
 Thumbs.db
 npm-debug.log*
+
+# generated codebase graph (regenerate with: graphify . --code-only)
+graphify-out/

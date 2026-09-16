@@ -32,6 +32,12 @@ export function scrollToSection(id: string) {
   if (!el) return;
   const lenis = getLenis();
   if (lenis) {
+    // menu open leaves lenis stopped + html overflow hidden; undo before scrolling
+    // (lenis.scrollTo no-ops while stopped)
+    if (lenis.isStopped) {
+      document.documentElement.style.overflow = "";
+      lenis.start();
+    }
     lenis.scrollTo(el, { offset: -72, duration: 1.2 });
   } else {
     const top = el.getBoundingClientRect().top + window.scrollY - 72;

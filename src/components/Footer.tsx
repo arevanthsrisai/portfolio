@@ -29,7 +29,7 @@ export function Footer() {
                 <span className="font-display text-sm font-bold text-accent-soft">R</span>
               </span>
               <span className="font-display text-sm font-medium tracking-wide text-ink-dim transition-colors group-hover:text-ink">
-                revanth<span className="text-accent">.dev</span>
+                revanth<span className="text-accent">.is-a.dev</span>
               </span>
             </button>
             <p className="mt-4 text-sm leading-relaxed text-ink-faint">

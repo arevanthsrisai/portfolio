@@ -267,7 +267,7 @@ export const achievements: Achievement[] = [
   },
   {
     title: "ReLU Club Activator",
-    detail: "Active member participating in AI/ML technical sessions and peer learning",
+    detail: "Active member participating in Technical sessions and peer learning",
     accent: "amber",
     icon: "cap",
     image: "/assets/relu_group.jpg",

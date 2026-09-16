@@ -104,7 +104,7 @@ export function Navbar() {
               <span className="absolute inset-0 rounded-xl bg-iris/10 opacity-0 transition-opacity duration-300 ease-smooth group-hover:opacity-100" />
             </span>
             <span className="hidden font-display text-sm font-medium tracking-wide text-ink-dim transition-colors duration-300 group-hover:text-ink sm:block">
-              revanth<span className="text-iris">.dev</span>
+              revanth<span className="text-iris">.is-a.dev</span>
             </span>
           </button>
           <nav className="hidden items-center gap-0.5 lg:flex" aria-label="Primary">
